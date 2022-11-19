@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <title>Jam Sessions</title>
-
+        <link href="/css/app.css" rel="stylesheet">
+        <script src="/js/app.js"></script>
         <!-- Fonts -->
         <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -21,12 +21,10 @@
         </style>
     </head>
     <body class="antialiased">
-        <div class="relative flex items-top justify-center  sm:items-center py-4 sm:pt-0">
+        <div class="relative flex items-top justify-center sm:pt-0">
             @if (Route::has('login'))
                 <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                     @auth
-                        <a href="{{ url('/home') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Home</a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -36,7 +34,6 @@
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
-                        </div>
                     @else
                         <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
 
@@ -46,39 +43,48 @@
                     @endauth
                 </div>
             @endif
-
-            @if(!empty($users))
-                <div class="container">
-                    <table class="table table-bordered data-table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Last Seen</th>
-                            <th>Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($users as $user)
-                            <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>
-                                    {{ Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}
-                                </td>
-                                <td>
-                                    @if(Cache::has('user-is-online-' . $user->id))
-                                        <span class="text-success">Online</span>
-                                    @else
-                                        <span class="text-secondary">Offline</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
         </div>
+        <div class="container-sm">
+            <div class="search__container">
+                <select class="js-example-disabled-results">
+                    <option value="one">First</option>
+                    <option value="two" disabled="disabled">Second (disabled)</option>
+                    <option value="three">Third</option>
+                </select>
+            </div>
+        </div>
+
+        @if(!empty($users))
+            <div class="container mt-5">
+                <table class="table table-bordered data-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Last Seen</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($users as $user)
+                        <tr>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>
+                                {{ Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}
+                            </td>
+                            <td>
+                                @if(Cache::has('user-is-online-' . $user->id))
+                                    <span class="text-success">Online</span>
+                                @else
+                                    <span class="text-secondary">Offline</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </body>
 </html>

@@ -26,6 +26,7 @@ class HomeController extends Controller
     {
         $users = User::select("*")
             ->where('id', '!=' , auth()->user()->id)
+            ->where('type', '=' , 0)
             ->whereNotNull('last_seen')
             ->orderBy('last_seen', 'DESC')
             ->paginate(10);
